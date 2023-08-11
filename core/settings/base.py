@@ -50,6 +50,7 @@ CUSTOM_APPS = [
     "apps.admin_panel",
     "apps.common",
     "apps.blog",
+    "apps.course"
 ]
 
 THIRD_PARTY_APPS = [
