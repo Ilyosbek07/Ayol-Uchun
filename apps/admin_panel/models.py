@@ -3,6 +3,7 @@ from django.db import models
 from apps.accounts.models import Profile
 from apps.blog.models import Blog
 from apps.common.models import BaseModel
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class SocialMedia(BaseModel):
@@ -17,7 +18,7 @@ class SocialMedia(BaseModel):
 class Contact(BaseModel):
     name = models.CharField(max_length=255)
     email = models.EmailField()
-    phone_number = models.CharField(max_length=125)
+    phone_number = PhoneNumberField()
     text = models.TextField()
 
     def __str__(self):
