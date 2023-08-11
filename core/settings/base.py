@@ -55,6 +55,7 @@ THIRD_PARTY_APPS = [
     "drf_yasg",
     "corsheaders",
     "ckeditor",
+    "ckeditor_uploader",
 ]
 
 REST_FRAMEWORK = {
@@ -176,3 +177,5 @@ CELERY_TIMEZONE = "Asia/Tashkent"
 
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CKEDITOR_UPLOAD_PATH = "content/ckeditor/"  # Adjust the path as needed
