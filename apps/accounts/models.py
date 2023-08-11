@@ -60,7 +60,7 @@ class PaymentType(BaseModel):
 class Payment(BaseModel):
     status = models.BooleanField(default=False)
     payment_type = models.ForeignKey(PaymentType, related_name='payment_type_payments', on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, related_name='course_payments', on_delete=models.CASCADE)
+    # course = models.ForeignKey(Course, related_name='course_payments', on_delete=models.CASCADE)
 
 
 class PaymentProcess(BaseModel):

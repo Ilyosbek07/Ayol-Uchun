@@ -46,6 +46,8 @@ DJANGO_APPS = [
 ]
 
 CUSTOM_APPS = [
+    "apps.accounts",
+    "apps.admin_panel",
     "apps.common",
     "apps.blog",
 ]
