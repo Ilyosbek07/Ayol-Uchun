@@ -1,5 +1,4 @@
 from django.db import models
-
 from apps.accounts.models import Profile
 from apps.blog.models import Blog
 from apps.common.models import BaseModel
