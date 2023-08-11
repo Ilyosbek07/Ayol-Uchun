@@ -1,5 +1,3 @@
-from django.db import models
-
 from apps.accounts.models import Profile
 
 
@@ -56,3 +54,4 @@ class Notification(BaseModel):
 
     def __str__(self):
         return self.name
+>>>>>>> main
