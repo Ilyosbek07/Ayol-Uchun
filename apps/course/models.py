@@ -68,7 +68,7 @@ class Video(models.Model):
 
 
 class Like(models.Model):
-    profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, related_name='course_like', on_delete=models.CASCADE)
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -82,7 +82,9 @@ class Complain(models.Model):
         ('copyright', 'Copyright Violation'),
         ('other', 'Other'),
     )
-    profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile,
+                                related_name='course_complain',
+                                on_delete=models.CASCADE)
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
     reason = models.CharField(max_length=20, choices=REASON_CHOICES)
     text = models.TextField()
@@ -92,8 +94,8 @@ class Complain(models.Model):
 
 
 class CommentVideo(BaseModel):
-    profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
-    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, related_name='comment_profile', on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, related_name='comment_video', on_delete=models.CASCADE)
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     text = RichTextField()
 
@@ -102,8 +104,8 @@ class CommentVideo(BaseModel):
 
 
 class CommentCourse(BaseModel):
-    profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, related_name='comment_course', on_delete=models.CASCADE)
     rate = models.IntegerField(null=True, blank=True)
     text = models.TextField()
 
@@ -112,7 +114,7 @@ class CommentCourse(BaseModel):
 
 
 class VideoWatchProgress(models.Model):
-    profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
     last_viewed_seconds = models.PositiveIntegerField()
