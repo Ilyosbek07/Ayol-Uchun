@@ -1,4 +1,7 @@
 from apps.accounts.models import Profile
+from django.db import models
+
+from apps.blog.models import Blog
 
 
 class BaseModel(models.Model):
@@ -54,4 +57,3 @@ class Notification(BaseModel):
 
     def __str__(self):
         return self.name
->>>>>>> main
