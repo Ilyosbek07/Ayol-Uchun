@@ -1,6 +1,9 @@
 from django.db import models
 from ckeditor.fields import RichTextField
+
+from apps.accounts.models import Profile
 from apps.common.models import BaseModel
+
 
 class Unit(models.Model):
     title = models.CharField(max_length=600)
@@ -20,7 +23,7 @@ class Course(models.Model):
         ('eur', 'EUR'),
         ('uzs', 'UZS'),
     )
-    profiles = models.ManyToManyField('accounts.Profile')
+    profiles = models.ManyToManyField(Profile)
     title = models.CharField(max_length=600)
     units = models.ManyToManyField(Unit)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
@@ -35,13 +38,13 @@ class Course(models.Model):
 
 
 class AccomplishedCourse(models.Model):
-    profile = models.ForeignKey('account.Profile')
+    profile = models.ForeignKey(Profile,
+                                related_name='accomplished_course',
+                                on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-
 
     def __str__(self):
         return self.course.title
-
 
 
 class Resource(models.Model):
@@ -50,6 +53,7 @@ class Resource(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Video(models.Model):
     title = models.CharField(max_length=600)
@@ -96,6 +100,7 @@ class CommentVideo(BaseModel):
     def __str__(self):
         return self.video.title
 
+
 class CommentCourse(BaseModel):
     profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -114,4 +119,3 @@ class VideoWatchProgress(models.Model):
 
     def __str__(self):
         return self.video.title
-
