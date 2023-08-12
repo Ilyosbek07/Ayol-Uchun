@@ -43,7 +43,6 @@ class Course(models.Model):
     price = models.BigIntegerField()
     discount = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
-
     certificate = models.FileField(upload_to="certificates/", blank=True, null=True)
     currency = models.CharField(max_length=10, choices=CURRENCY_CHOICES, default="usd")
     description = RichTextField()
