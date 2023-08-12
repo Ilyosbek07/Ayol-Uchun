@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 from django.contrib.auth.models import User
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+=======
+from apps.accounts.models import Profile
+from django.db import models
+
+from apps.blog.models import Blog
+>>>>>>> c5a8e2a (feat : deleted blog branch)
 
 
 class BaseModel(models.Model):
@@ -33,6 +40,7 @@ class Notification(BaseModel):
 
     def __str__(self):
         return self.name
+<<<<<<< HEAD
 
 
 class UserNotification(BaseModel):
@@ -57,3 +65,5 @@ class Contact(BaseModel):
 
     def __str__(self):
         return self.name
+=======
+>>>>>>> c5a8e2a (feat : deleted blog branch)
