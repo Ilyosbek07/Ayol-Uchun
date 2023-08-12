@@ -27,10 +27,7 @@ class Course(models.Model):
     image = models.ImageField(upload_to='images/')
     price = models.BigIntegerField()
     is_active = models.BooleanField(default=True)
-    certificate = models.FileField(upload_to='certificates/', blank=True, null=True)
-    currency = models.CharField(max_length=10, choices=CURRENCY_CHOICES, default='usd')
-    description = RichTextField()
-
+    
     def __str__(self):
         return self.title
 
@@ -67,7 +64,7 @@ class Resource(models.Model):
     def __str__(self):
         return self.title
 
-class Video(models.Model):
+ class Video(models.Model):
     title = models.CharField(max_length=600)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
     video = models.FileField(upload_to='videos/')
@@ -76,11 +73,12 @@ class Video(models.Model):
     description = RichTextField()
     order = models.PositiveIntegerField(default=0)
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         ordering = ['order']
 
-    def __str__(self):
-        return self.title
 
 
 class CommentVideo(BaseModel):
@@ -100,7 +98,6 @@ class VideoWatchProgress(models.Model):
 
     def __str__(self):
         return self.video.title
-
 
 
 class Like(models.Model):
