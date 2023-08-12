@@ -27,9 +27,9 @@ class Region(BaseModel):
 
 class Profile(BaseModel):
     GENDER_CHOICES = [
-        ('male', 'Male'),
-        ('female', 'Female'),
-        ('other', 'Other'),
+        ("male", "Male"),
+        ("female", "Female"),
+        ("other", "Other"),
     ]
 
     occupation = models.CharField(max_length=255)
@@ -59,7 +59,9 @@ class PaymentType(BaseModel):
 
 class Payment(BaseModel):
     status = models.BooleanField(default=False)
-    payment_type = models.ForeignKey(PaymentType, related_name='payment_type_payments', on_delete=models.CASCADE)
+    payment_type = models.ForeignKey(
+        PaymentType, related_name="payment_type_payments", on_delete=models.CASCADE
+    )
     # course = models.ForeignKey(Course, related_name='course_payments', on_delete=models.CASCADE)
 
 

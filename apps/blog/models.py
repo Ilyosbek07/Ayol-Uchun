@@ -10,8 +10,6 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.name
-
-
 class Author(BaseModel):
     name = models.CharField(max_length=64)
 
