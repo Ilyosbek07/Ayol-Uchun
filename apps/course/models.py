@@ -41,7 +41,7 @@ class Course(models.Model):
     is_bestseller = models.BooleanField(default=False)
     image = models.ImageField(upload_to="images/")
     price = models.BigIntegerField()
-    discount = models.FloatField(default=0)
+    discount = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
     certificate = models.FileField(upload_to="certificates/", blank=True, null=True)
