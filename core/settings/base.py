@@ -46,8 +46,11 @@ DJANGO_APPS = [
 ]
 
 CUSTOM_APPS = [
+    "apps.accounts",
+    "apps.admin_panel",
     "apps.common",
     "apps.blog",
+    "apps.course"
 ]
 
 THIRD_PARTY_APPS = [
@@ -56,6 +59,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "ckeditor",
     "ckeditor_uploader",
+    "phonenumber_field",
 ]
 
 REST_FRAMEWORK = {
