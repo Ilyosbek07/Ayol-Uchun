@@ -34,9 +34,9 @@ urlpatterns = [
         CommentCourseViewSet.as_view({"get": "list", "post": "create"}),
     ),
     path(
-        "comment-courses/<int:pk>/",
+        "<int:pk>/comment",
         CommentCourseViewSet.as_view(
-            {"get": "retrieve", "put": "update", "delete": "destroy"}
+            {"get": "list", "put": "update", "delete": "destroy"}
         ),
     ),
     path("units/", UnitViewSet.as_view({"get": "list", "post": "create"})),
