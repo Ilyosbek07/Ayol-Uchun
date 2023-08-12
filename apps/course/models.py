@@ -3,10 +3,15 @@ from django.db import models
 from apps.common.models import BaseModel
 from apps.accounts.models import Profile
 
+
 class Author(models.Model):
     name = models.CharField(max_length=300)
+
+
 class Category(models.Model):
     name = models.CharField(max_length=300)
+
+
 class Course(models.Model):
     STATUS_CHOICES = (
         ('draft', 'Draft'),
@@ -27,9 +32,10 @@ class Course(models.Model):
     image = models.ImageField(upload_to='images/')
     price = models.BigIntegerField()
     is_active = models.BooleanField(default=True)
-    
+
     def __str__(self):
         return self.title
+
 
 class CommentCourse(BaseModel):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
@@ -43,18 +49,17 @@ class CommentCourse(BaseModel):
     def __str__(self):
         return self.course.name
 
+
 class Unit(models.Model):
     title = models.CharField(max_length=600)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     order = models.PositiveIntegerField(default=0)
-
 
     class Meta:
         ordering = ['order']
 
     def __str__(self):
         return self.title
-
 
 
 class Resource(models.Model):
@@ -64,7 +69,8 @@ class Resource(models.Model):
     def __str__(self):
         return self.title
 
- class Video(models.Model):
+
+class Video(models.Model):
     title = models.CharField(max_length=600)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
     video = models.FileField(upload_to='videos/')
@@ -80,7 +86,6 @@ class Resource(models.Model):
         ordering = ['order']
 
 
-
 class CommentVideo(BaseModel):
     profile = models.ForeignKey(Profile, related_name='comment_profile', on_delete=models.CASCADE)
     video = models.ForeignKey(Video, related_name='comment_video', on_delete=models.CASCADE)
@@ -89,6 +94,7 @@ class CommentVideo(BaseModel):
 
     def __str__(self):
         return self.text
+
 
 class VideoWatchProgress(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
@@ -124,9 +130,6 @@ class Complain(models.Model):
 
     def __str__(self):
         return self.video.title
-
-
-
 
 
 class UserCourse(models.Model):
