@@ -1,3 +1,46 @@
 from django.shortcuts import render
+from rest_framework import generics
+from rest_framework.response import Response
 
-# Create your views here.
+from apps.accounts.models import Profile
+from apps.accounts.serializers import ProfileSerializer
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view
+
+
+@api_view(['POST', ])
+def logout_view(request):
+    # First
+    try:
+        token = Token.objects.get(user=request.user)
+        print(token)
+        token.delete()
+        return Response({
+            "Response": "Token deleted"
+        })
+    except Exception as err:
+        return Response({
+            "Erorr": f"{err}"
+        })
+
+class ProfileRetrieveAPIView(generics.RetrieveAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+
+
+class ProfileCreateAPIView(generics.CreateAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+
+
+class ProfileUpdateAPIView(generics.UpdateAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+
+
+class ProfileCommentsListAPIView(generics.ListAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')
