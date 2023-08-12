@@ -43,6 +43,7 @@ class Course(models.Model):
     price = models.BigIntegerField()
     discount = models.FloatField(default=0)
     is_active = models.BooleanField(default=True)
+
     certificate = models.FileField(upload_to="certificates/", blank=True, null=True)
     currency = models.CharField(max_length=10, choices=CURRENCY_CHOICES, default="usd")
     description = RichTextField()
@@ -98,11 +99,11 @@ class Video(models.Model):
     description = RichTextField()
     order = models.PositiveIntegerField(default=0)
 
-    class Meta:
-        ordering = ["order"]
-
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ['order']
 
 
 class CommentVideo(BaseModel):

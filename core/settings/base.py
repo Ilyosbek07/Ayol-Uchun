@@ -47,10 +47,10 @@ DJANGO_APPS = [
 
 CUSTOM_APPS = [
     "apps.accounts",
-    "apps.admin_panel",
+    "apps.interview",
     "apps.common",
     "apps.blog",
-    "apps.course",
+    "apps.course"
 ]
 
 THIRD_PARTY_APPS = [
@@ -59,6 +59,8 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "ckeditor",
     "django_filters",
+    "ckeditor_uploader",
+    "phonenumber_field",
 ]
 
 REST_FRAMEWORK = {
@@ -182,3 +184,5 @@ CELERY_TIMEZONE = "Asia/Tashkent"
 
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CKEDITOR_UPLOAD_PATH = "content/ckeditor/"  # Adjust the path as needed

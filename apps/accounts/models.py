@@ -40,18 +40,10 @@ class Profile(BaseModel):
     instagram_url = models.URLField(null=True, blank=True)
     imkon_url = models.URLField(null=True, blank=True)
     linked_in_url = models.URLField(null=True, blank=True)
-    user = models.ForeignKey(
-        User, related_name="user_profiles", on_delete=models.CASCADE
-    )
-    country = models.ForeignKey(
-        Country, related_name="country_profiles", on_delete=models.CASCADE
-    )
-    region = models.ForeignKey(
-        Region, related_name="region_profiles", on_delete=models.CASCADE
-    )
-    position = models.ForeignKey(
-        Position, related_name="position_profiles", on_delete=models.CASCADE
-    )
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, related_name='country_profiles', on_delete=models.CASCADE)
+    region = models.ForeignKey(Region, related_name='region_profiles', on_delete=models.CASCADE)
+    position = models.ForeignKey(Position, related_name='position_profiles', on_delete=models.CASCADE)
     birthdate = models.DateTimeField()
 
     def __str__(self):
