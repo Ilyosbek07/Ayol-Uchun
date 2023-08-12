@@ -50,6 +50,7 @@ CUSTOM_APPS = [
     "apps.admin_panel",
     "apps.common",
     "apps.blog",
+    "apps.course",
 ]
 
 THIRD_PARTY_APPS = [
@@ -57,10 +58,13 @@ THIRD_PARTY_APPS = [
     "drf_yasg",
     "corsheaders",
     "ckeditor",
+    "django_filters",
 ]
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework.authentication.SessionAuthentication",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
+    ),
     "DEFAULT_FILTER_BACKENDS": (
         "django_filters.rest_framework.DjangoFilterBackend",
         "rest_framework.filters.SearchFilter",

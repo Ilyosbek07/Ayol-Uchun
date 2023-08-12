@@ -27,9 +27,9 @@ class Region(BaseModel):
 
 class Profile(BaseModel):
     GENDER_CHOICES = [
-        ('male', 'Male'),
-        ('female', 'Female'),
-        ('other', 'Other'),
+        ("male", "Male"),
+        ("female", "Female"),
+        ("other", "Other"),
     ]
 
     occupation = models.CharField(max_length=255)
@@ -40,10 +40,18 @@ class Profile(BaseModel):
     instagram_url = models.URLField(null=True, blank=True)
     imkon_url = models.URLField(null=True, blank=True)
     linked_in_url = models.URLField(null=True, blank=True)
-    user = models.ForeignKey(User, related_name='user_profiles', on_delete=models.CASCADE)
-    country = models.ForeignKey(Country, related_name='country_profiles', on_delete=models.CASCADE)
-    region = models.ForeignKey(Region, related_name='region_profiles', on_delete=models.CASCADE)
-    position = models.ForeignKey(Position, related_name='position_profiles', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, related_name="user_profiles", on_delete=models.CASCADE
+    )
+    country = models.ForeignKey(
+        Country, related_name="country_profiles", on_delete=models.CASCADE
+    )
+    region = models.ForeignKey(
+        Region, related_name="region_profiles", on_delete=models.CASCADE
+    )
+    position = models.ForeignKey(
+        Position, related_name="position_profiles", on_delete=models.CASCADE
+    )
     birthdate = models.DateTimeField()
 
     def __str__(self):
@@ -59,7 +67,9 @@ class PaymentType(BaseModel):
 
 class Payment(BaseModel):
     status = models.BooleanField(default=False)
-    payment_type = models.ForeignKey(PaymentType, related_name='payment_type_payments', on_delete=models.CASCADE)
+    payment_type = models.ForeignKey(
+        PaymentType, related_name="payment_type_payments", on_delete=models.CASCADE
+    )
     # course = models.ForeignKey(Course, related_name='course_payments', on_delete=models.CASCADE)
 
 

@@ -7,7 +7,7 @@ from apps.common.models import BaseModel
 class SocialMedia(BaseModel):
     name = models.CharField(max_length=255)
     link = models.URLField()
-    photo = models.ImageField(upload_to='social_media_photos/')
+    photo = models.ImageField(upload_to="social_media_photos/")
 
     def __str__(self):
         return self.name
@@ -24,11 +24,13 @@ class Contact(BaseModel):
 
 
 class Interview(BaseModel):
-    profile = models.ForeignKey(Profile, related_name='interviews', on_delete=models.CASCADE)
+    profile = models.ForeignKey(
+        Profile, related_name="interviews", on_delete=models.CASCADE
+    )
     title = models.CharField(max_length=255)
-    video = models.FileField(upload_to='interview_videos/')
+    video = models.FileField(upload_to="interview_videos/")
     url = models.URLField()
-    thumbnail = models.ImageField(upload_to='interview_thumbnails/')
+    thumbnail = models.ImageField(upload_to="interview_thumbnails/")
     description = models.TextField()
 
     def __str__(self):
@@ -37,13 +39,15 @@ class Interview(BaseModel):
 
 class Notification(BaseModel):
     STATUS_CHOICES = [
-        ('moderation', 'Moderation'),
-        ('published', 'Published'),
-        ('archived', 'Archived'),
+        ("moderation", "Moderation"),
+        ("published", "Published"),
+        ("archived", "Archived"),
     ]
 
     name = models.CharField(max_length=255)
-    blog_id = models.ForeignKey(Blog, related_name='notifications', on_delete=models.CASCADE)
+    blog_id = models.ForeignKey(
+        Blog, related_name="notifications", on_delete=models.CASCADE
+    )
     description = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
 

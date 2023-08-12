@@ -22,7 +22,11 @@ class File(BaseModel):
 
     file = models.FileField(
         upload_to="blog/files/",
-        validators=[FileExtensionValidator(allowed_extensions=["mp4", "avi", "mov", "jpg", "jpeg", "heic", "png"])],
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["mp4", "avi", "mov", "jpg", "jpeg", "heic", "png"]
+            )
+        ],
         null=True,
         blank=True,
     )
@@ -45,7 +49,9 @@ class Blog(BaseModel):
     title = models.CharField(max_length=64)
     # profile = models.ForeignKey()
     description = RichTextField()
-    category = models.ForeignKey("blog.Category", on_delete=models.CASCADE, related_name="blog", null=True)
+    category = models.ForeignKey(
+        "blog.Category", on_delete=models.CASCADE, related_name="blog", null=True
+    )
     content = models.ForeignKey(
         "blog.File",
         on_delete=models.CASCADE,
