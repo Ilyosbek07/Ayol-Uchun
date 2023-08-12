@@ -86,6 +86,7 @@ class CourseSerializer(serializers.ModelSerializer):
     author_names = serializers.StringRelatedField(many=True, source="author")
     category_name = serializers.CharField(source="category.name", read_only=True)
     author_count = serializers.SerializerMethodField()
+    discount_price = serializers.SerializerMethodField(read_only=True, default=0)
 
     class Meta:
         model = Course
@@ -100,15 +101,25 @@ class CourseSerializer(serializers.ModelSerializer):
             "is_bestseller",
             "image",
             "price",
+            "discount_price",
+            "discount",
             "is_active",
             "certificate",
             "currency",
             "description",
             "avarage_rate",
+
         )
 
     def get_author_count(self, obj):
         return obj.author.count()
+
+
+    def get_discount_price(self, instance):
+        if instance.discount > 0:
+            price = instance.price
+            discount_price = (instance.discount / 100) * price
+            return discount_price
 
 
 class AuthorSerializer(serializers.ModelSerializer):
