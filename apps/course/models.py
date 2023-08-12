@@ -2,6 +2,7 @@ from ckeditor.fields import RichTextField
 from django.db import models
 from apps.common.models import BaseModel
 from apps.accounts.models import Profile
+
 class Author(models.Model):
     name = models.CharField(max_length=300)
 class Category(models.Model):
