@@ -119,7 +119,7 @@ class CourseSerializer(serializers.ModelSerializer):
         if instance.discount > 0:
             price = instance.price
             discount_price = (instance.discount / 100) * price
-            return discount_price
+            return int(discount_price)
 
 
 class AuthorSerializer(serializers.ModelSerializer):
