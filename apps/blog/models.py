@@ -30,8 +30,20 @@ class Blog(BaseModel):
     ]
 
     title = models.CharField(max_length=64)
-    author = models.OneToOneField("blog.Author", on_delete=models.CASCADE, related_name="blog", null=True, blank=True)
-    category = models.ForeignKey("blog.Category", on_delete=models.CASCADE, related_name="blog", null=True, blank=True)
+    author = models.ForeignKey(
+        "blog.Author",
+        on_delete=models.CASCADE,
+        related_name="blog",
+        null=True,
+        blank=True,
+    )
+    category = models.ForeignKey(
+        "blog.Category",
+        on_delete=models.CASCADE,
+        related_name="blog",
+        null=True,
+        blank=True,
+    )
     content = RichTextUploadingField(null=True)
     cover = models.ImageField(upload_to="blog/images/", null=True, blank=True)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
