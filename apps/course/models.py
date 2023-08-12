@@ -7,7 +7,8 @@ from apps.accounts.models import Profile
 
 
 class Author(models.Model):
-    name = models.CharField(max_length=300)
+    image = models.ImageField(upload_to="author/images", default="/default.jpg")
+    name = models.CharField(max_length=300, default="User")
 
     def __str__(self):
         return self.name
@@ -50,7 +51,7 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
-    def avarage_rate(self):
+    def average_rate(self):
         return self.comment_course.aggregate(avg_rate=Avg("rate"))["avg_rate"]
 
 

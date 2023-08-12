@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+from rest_framework.response import Response
+
 from .models import (
     Course,
     CommentCourse,
@@ -37,10 +39,22 @@ class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     filterset_class = CourseFilter
 
+    def get_serializer_context(self, **kwargs):
+        context = super(CourseViewSet, self).get_serializer_context()
+        user_id = self.request.user.id
+        context.update({'user_id': user_id})
+        return context
+
 
 class CommentCourseViewSet(viewsets.ModelViewSet):
     queryset = CommentCourse.objects.all()
     serializer_class = CommentCourseSerializer
+
+    def list(self, request, pk=None):
+        queryset = CommentCourse.objects.filter(course=pk).order_by('created_at')
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+
 
 
 class AuthorViewSet(viewsets.ModelViewSet):

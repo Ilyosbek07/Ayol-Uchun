@@ -82,21 +82,30 @@ class CommentCourseSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = "__all__"
+
+
 class CourseSerializer(serializers.ModelSerializer):
-    author_names = serializers.StringRelatedField(many=True, source="author")
+    author = AuthorSerializer(many=True)
     category_name = serializers.CharField(source="category.name", read_only=True)
     author_count = serializers.SerializerMethodField()
     discount_price = serializers.SerializerMethodField(read_only=True, default=0)
+    is_bought = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Course
         fields = (
             "id",
-            "author_names",
+            "author",
             "author_count",
             "category_name",
             "title",
             "status",
+            "is_bought",
             "is_recommended",
             "is_bestseller",
             "image",
@@ -107,7 +116,7 @@ class CourseSerializer(serializers.ModelSerializer):
             "certificate",
             "currency",
             "description",
-            "avarage_rate",
+            "average_rate",
 
         )
 
@@ -120,13 +129,11 @@ class CourseSerializer(serializers.ModelSerializer):
             price = instance.price
             discount_price = (instance.discount / 100) * price
             return int(discount_price)
-
-
-class AuthorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Author
-        fields = "__all__"
-
+    def get_is_bought(self, instance):
+        user_id = self.context.get('user_id')
+        if UserCourse.objects.filter(profile=user_id, course=instance.id):
+            return True
+        return False
 
 class CategorySerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField(many=True, read_only=True)
