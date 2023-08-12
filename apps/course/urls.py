@@ -39,9 +39,9 @@ urlpatterns = [
             {"get": "list", "put": "update", "delete": "destroy"}
         ),
     ),
-    path("units/", UnitViewSet.as_view({"get": "list", "post": "create"})),
+    path("<int:pk>/units/", UnitViewSet.as_view({"get": "list", "post": "create"})),
     path(
-        "units/<int:pk>/",
+        "unit/<int:pk>/",
         UnitViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"}),
     ),
     path("resources/", ResourceViewSet.as_view({"get": "list", "post": "create"})),

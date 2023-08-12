@@ -51,7 +51,7 @@ class CommentCourseViewSet(viewsets.ModelViewSet):
     serializer_class = CommentCourseSerializer
 
     def list(self, request, pk=None):
-        queryset = CommentCourse.objects.filter(course=pk).order_by('created_at')
+        queryset = self.get_queryset().filter(course=pk).order_by('created_at')
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
@@ -70,6 +70,12 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class UnitViewSet(viewsets.ModelViewSet):
     queryset = Unit.objects.all()
     serializer_class = UnitSerializer
+
+    def list(self, request, pk=None):
+        queryset = self.get_queryset().filter(course=pk).order_by('order')
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+
 
 
 class ResourceViewSet(viewsets.ModelViewSet):
