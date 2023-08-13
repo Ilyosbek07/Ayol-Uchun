@@ -13,7 +13,7 @@ class BaseModel(models.Model):
 class SocialMedia(BaseModel):
     name = models.CharField(max_length=255)
     link = models.URLField()
-    photo = models.ImageField(upload_to='social_media_photos/')
+    photo = models.ImageField(upload_to="social_media_photos/")
 
     def __str__(self):
         return self.name
@@ -21,9 +21,9 @@ class SocialMedia(BaseModel):
 
 class Notification(BaseModel):
     STATUS_CHOICES = [
-        ('moderation', 'Moderation'),
-        ('published', 'Published'),
-        ('archived', 'Archived'),
+        ("moderation", "Moderation"),
+        ("published", "Published"),
+        ("archived", "Archived"),
     ]
 
     name = models.CharField(max_length=255)
@@ -36,14 +36,10 @@ class Notification(BaseModel):
 
 class UserNotification(BaseModel):
     user = models.ForeignKey(
-        User,
-        related_name='user_notification',
-        on_delete=models.CASCADE
+        User, related_name="user_notification", on_delete=models.CASCADE
     )
     notification = models.ForeignKey(
-        Notification,
-        related_name='notification',
-        on_delete=models.CASCADE
+        Notification, related_name="notification", on_delete=models.CASCADE
     )
     is_read = models.BooleanField(default=False)
 

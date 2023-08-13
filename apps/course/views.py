@@ -42,7 +42,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     def get_serializer_context(self, **kwargs):
         context = super(CourseViewSet, self).get_serializer_context()
         user_id = self.request.user.id
-        context.update({'user_id': user_id})
+        context.update({"user_id": user_id})
         return context
 
 
@@ -51,10 +51,9 @@ class CommentCourseViewSet(viewsets.ModelViewSet):
     serializer_class = CommentCourseSerializer
 
     def list(self, request, pk=None):
-        queryset = self.get_queryset().filter(course=pk).order_by('created_at')
+        queryset = self.get_queryset().filter(course=pk).order_by("created_at")
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
-
 
 
 class AuthorViewSet(viewsets.ModelViewSet):
@@ -72,10 +71,11 @@ class UnitViewSet(viewsets.ModelViewSet):
     serializer_class = UnitSerializer
 
     def list(self, request, pk=None):
-        queryset = self.get_queryset().filter(course=pk).order_by('order')
-        serializer = self.serializer_class(queryset, many=True)
+        queryset = self.get_queryset().filter(course=pk).order_by("order")
+        serializer = self.serializer_class(
+            queryset, many=True, context={"user_id": request.user.id, "course_id": pk}
+        )
         return Response(serializer.data)
-
 
 
 class ResourceViewSet(viewsets.ModelViewSet):

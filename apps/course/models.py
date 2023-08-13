@@ -1,7 +1,7 @@
 from ckeditor.fields import RichTextField
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Avg
-
 from apps.common.models import BaseModel
 from apps.accounts.models import Profile
 
@@ -72,7 +72,7 @@ class CommentCourse(BaseModel):
 
 class Unit(models.Model):
     title = models.CharField(max_length=600)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="courses")
     order = models.PositiveIntegerField(default=0)
 
     class Meta:
@@ -92,18 +92,25 @@ class Resource(models.Model):
 
 class Video(models.Model):
     title = models.CharField(max_length=600)
-    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
-    video = models.FileField(upload_to="videos/")
-    video_url = models.URLField()
-    resource = models.ManyToManyField(Resource)
+    unit = models.ForeignKey(
+        Unit, on_delete=models.CASCADE, related_name="videos_of_unit"
+    )
+    video = models.FileField(upload_to="videos/", default=None)
+    video_url = models.URLField(blank=True)
+    resource = models.ManyToManyField(Resource, blank=True)
     description = RichTextField()
     order = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if self.video != "" and self.video_url != "":
+            return super().save(*args, **kwargs)
+        raise ValidationError("Either video path or video url must be provided.")
+
     class Meta:
-        ordering = ['order']
+        ordering = ["order"]
 
 
 class CommentVideo(BaseModel):
