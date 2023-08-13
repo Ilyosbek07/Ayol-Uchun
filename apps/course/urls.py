@@ -4,12 +4,8 @@ from .views import (
     CourseViewSet,
     CommentCourseViewSet,
     UnitViewSet,
-    ResourceViewSet,
     VideoViewSet,
     CommentVideoViewSet,
-    VideoWatchProgressViewSet,
-    LikeViewSet,
-    ComplainViewSet,
     UserCourseViewSet,
     UserCertificateViewSet,
     CategoryViewSet,
@@ -17,7 +13,6 @@ from .views import (
 
 router = DefaultRouter()
 
-# router.register(r'courses', CourseViewSet)
 
 
 urlpatterns = [
@@ -30,74 +25,31 @@ urlpatterns = [
         ),
     ),
     path(
-        "comment-courses/",
+        "comment-courses/<int:pk>/",
         CommentCourseViewSet.as_view({"get": "list", "post": "create"}),
     ),
     path(
-        "<int:pk>/comment",
+        "<int:pk>/comments",
         CommentCourseViewSet.as_view(
             {"get": "list", "put": "update", "delete": "destroy"}
         ),
     ),
     path("<int:pk>/units/", UnitViewSet.as_view({"get": "list", "post": "create"})),
     path(
-        "unit/<int:pk>/",
-        UnitViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"}),
-    ),
-    path("resources/", ResourceViewSet.as_view({"get": "list", "post": "create"})),
-    path(
-        "resources/<int:pk>/",
-        ResourceViewSet.as_view(
-            {"get": "retrieve", "put": "update", "delete": "destroy"}
-        ),
-    ),
-    path("videos/", VideoViewSet.as_view({"get": "list", "post": "create"})),
-    path(
-        "videos/<int:pk>/",
+        "video/<int:pk>/",
         VideoViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"}),
     ),
     path(
-        "comment-videos/",
-        CommentVideoViewSet.as_view({"get": "list", "post": "create"}),
-    ),
-    path(
-        "comment-videos/<int:pk>/",
+        "video-comments/<int:pk>/",
         CommentVideoViewSet.as_view(
-            {"get": "retrieve", "put": "update", "delete": "destroy"}
+            {"get": "retrieve", "put": "update", "post": "create", "delete": "destroy"}
         ),
     ),
-    path(
-        "video-watch-progress/",
-        VideoWatchProgressViewSet.as_view({"get": "list", "post": "create"}),
-    ),
-    path(
-        "video-watch-progress/<int:pk>/",
-        VideoWatchProgressViewSet.as_view(
-            {"get": "retrieve", "put": "update", "delete": "destroy"}
-        ),
-    ),
-    path("likes/", LikeViewSet.as_view({"get": "list", "post": "create"})),
-    path(
-        "likes/<int:pk>/",
-        LikeViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"}),
-    ),
-    path("complains/", ComplainViewSet.as_view({"get": "list", "post": "create"})),
-    path(
-        "complains/<int:pk>/",
-        ComplainViewSet.as_view(
-            {"get": "retrieve", "put": "update", "delete": "destroy"}
-        ),
-    ),
-    path("user-courses/", UserCourseViewSet.as_view({"get": "list", "post": "create"})),
     path(
         "user-courses/<int:pk>/",
         UserCourseViewSet.as_view(
             {"get": "retrieve", "put": "update", "delete": "destroy"}
         ),
-    ),
-    path(
-        "user-certificates/",
-        UserCertificateViewSet.as_view({"get": "list", "post": "create"}),
     ),
     path(
         "user-certificates/<int:pk>/",
@@ -106,3 +58,5 @@ urlpatterns = [
         ),
     ),
 ]
+
+

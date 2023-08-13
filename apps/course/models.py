@@ -105,9 +105,10 @@ class Video(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if self.video != "" and self.video_url != "":
+        if self.video != "" or self.video_url != "":
             return super().save(*args, **kwargs)
-        raise ValidationError("Either video path or video url must be provided.")
+        else:
+            raise ValidationError("Either video path or video url must be provided.")
 
     class Meta:
         ordering = ["order"]
@@ -120,8 +121,19 @@ class CommentVideo(BaseModel):
     video = models.ForeignKey(
         Video, related_name="comment_video", on_delete=models.CASCADE
     )
+    main_comment = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="main_comments",
+    )
     parent_comment = models.ForeignKey(
-        "self", on_delete=models.CASCADE, null=True, blank=True
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="parent_comments",
     )
     text = RichTextField()
 
@@ -191,3 +203,5 @@ class UserCertificate(BaseModel):
 
     def __str__(self):
         return self.course.title
+
+

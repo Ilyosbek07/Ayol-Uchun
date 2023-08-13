@@ -61,6 +61,7 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "ckeditor_uploader",
     "phonenumber_field",
+    "cv2",
 ]
 
 REST_FRAMEWORK = {
