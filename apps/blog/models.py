@@ -30,7 +30,7 @@ class Blog(BaseModel):
     ]
 
     title = models.CharField(max_length=64)
-    author = models.OneToOneField(
+    author = models.ForeignKey(
         "blog.Author",
         on_delete=models.CASCADE,
         related_name="blog",
