@@ -138,14 +138,14 @@ class CourseSerializer(serializers.ModelSerializer):
 
 class UnitSerializer(serializers.ModelSerializer):
     videos_of_unit = VideoSerializer(many=True, read_only=True)
-    is_boughts = serializers.SerializerMethodField(read_only=True)
+    is_bought = serializers.SerializerMethodField(read_only=True)
     status = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Unit
-        fields = ("title", "is_boughts", "status", "order", "videos_of_unit")
+        fields = ("title", "is_bought", "status", "order", "videos_of_unit")
 
-    def get_is_boughts(self, instance):
+    def get_is_bought(self, instance):
         user_id = self.context.get("user_id")
         course_id = self.context.get("course_id")
         if UserCourse.objects.filter(profile=user_id, course=course_id):
