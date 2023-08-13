@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework import serializers
 from .models import (
     Course,
@@ -58,7 +59,17 @@ class VideoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Video
-        fields = "__all__"
+        fields = (
+            "title",
+            "unit",
+            "video",
+            "video_url",
+            "resource",
+            "description",
+            "order",
+            "comment_video",
+            "video_watch_progress",
+        )
 
 
 class ResourceSerializer(serializers.ModelSerializer):
@@ -67,20 +78,10 @@ class ResourceSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class UnitSerializer(serializers.ModelSerializer):
-    resources = ResourceSerializer(many=True, read_only=True)
-    videos = VideoSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Unit
-        fields = "__all__"
-
-
 class CommentCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentCourse
         fields = "__all__"
-
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -117,23 +118,57 @@ class CourseSerializer(serializers.ModelSerializer):
             "currency",
             "description",
             "average_rate",
-
         )
 
     def get_author_count(self, obj):
         return obj.author.count()
-
 
     def get_discount_price(self, instance):
         if instance.discount > 0:
             price = instance.price
             discount_price = (instance.discount / 100) * price
             return int(discount_price)
+
     def get_is_bought(self, instance):
-        user_id = self.context.get('user_id')
+        user_id = self.context.get("user_id")
         if UserCourse.objects.filter(profile=user_id, course=instance.id):
             return True
         return False
+
+
+class UnitSerializer(serializers.ModelSerializer):
+    videos_of_unit = VideoSerializer(many=True, read_only=True)
+    is_boughts = serializers.SerializerMethodField(read_only=True)
+    status = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Unit
+        fields = ("title", "is_boughts", "status", "order", "videos_of_unit")
+
+    def get_is_boughts(self, instance):
+        user_id = self.context.get("user_id")
+        course_id = self.context.get("course_id")
+        if UserCourse.objects.filter(profile=user_id, course=course_id):
+            return True
+        return False
+
+    def get_status(self, instance):
+        user_id = self.context.get("user_id")
+        course_id = self.context.get("course_id")
+        watched_video_count = VideoWatchProgress.objects.filter(
+            video__unit__course_id=course_id,
+            video__unit_id=instance.id,
+            profile=user_id,
+        ).aggregate(video_count=Count("video"))["video_count"]
+        unit_video_count = Video.objects.filter(unit_id=instance.id).count()
+
+        if watched_video_count == 0:
+            return "Ko'rilmagan"
+        elif watched_video_count > 0 and watched_video_count < unit_video_count:
+            return "Jarayonda"
+        elif watched_video_count == unit_video_count:
+            return "Ko'rilgan"
+
 
 class CategorySerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField(many=True, read_only=True)

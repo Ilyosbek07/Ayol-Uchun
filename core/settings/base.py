@@ -50,7 +50,7 @@ CUSTOM_APPS = [
     "apps.interview",
     "apps.common",
     "apps.blog",
-    "apps.course"
+    "apps.course",
 ]
 
 THIRD_PARTY_APPS = [

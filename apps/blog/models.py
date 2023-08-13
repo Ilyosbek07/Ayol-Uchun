@@ -10,6 +10,8 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.name
+
+
 class Author(BaseModel):
     name = models.CharField(max_length=64)
 
@@ -28,8 +30,20 @@ class Blog(BaseModel):
     ]
 
     title = models.CharField(max_length=64)
-    author = models.OneToOneField("blog.Author", on_delete=models.CASCADE, related_name="blog", null=True, blank=True)
-    category = models.ForeignKey("blog.Category", on_delete=models.CASCADE, related_name="blog", null=True, blank=True)
+    author = models.OneToOneField(
+        "blog.Author",
+        on_delete=models.CASCADE,
+        related_name="blog",
+        null=True,
+        blank=True,
+    )
+    category = models.ForeignKey(
+        "blog.Category",
+        on_delete=models.CASCADE,
+        related_name="blog",
+        null=True,
+        blank=True,
+    )
     content = RichTextUploadingField(null=True)
     cover = models.ImageField(upload_to="blog/images/", null=True, blank=True)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
