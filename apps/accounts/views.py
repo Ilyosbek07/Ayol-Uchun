@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.response import Response
 
@@ -6,6 +5,15 @@ from apps.accounts.models import Profile
 from apps.accounts.serializers import ProfileSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from djoser import utils
+
+from core.settings import base
 
 
 @api_view(['POST', ])
@@ -23,6 +31,7 @@ def logout_view(request):
             "Erorr": f"{err}"
         })
 
+
 class ProfileRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
@@ -38,9 +47,3 @@ class ProfileUpdateAPIView(generics.UpdateAPIView):
     queryset = Profile.objects.all()
 
 
-class ProfileCommentsListAPIView(generics.ListAPIView):
-    serializer_class = ProfileSerializer
-    queryset = Profile.objects.all()
-
-    def get_queryset(self):
-        pk = self.kwargs.get('pk')

@@ -1,11 +1,23 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
+from apps.accounts.models import Profile, PaymentType, PaymentProcess, Payment, Position, Country, Region
+# serializers.py
 
-from apps.accounts.models import Profile, PaymentType, PaymentProcess, Payment
+from rest_framework import serializers
+from djoser.serializers import UserCreateSerializer
+
+
+class CustomUserCreateSerializer(UserCreateSerializer):
+    class Meta(UserCreateSerializer.Meta):
+        fields = ('id', 'email', 'password', 'first_name','username', 'last_name')
+
+
+# Additional serializer for email verification
+class EmailVerificationSerializer(serializers.Serializer):
+    token = serializers.CharField()
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    created_at = serializers.DateTimeField(read_only=True)
-
     class Meta:
         model = Profile
         fields = (
@@ -27,9 +39,42 @@ class ProfileSerializer(serializers.ModelSerializer):
         )
 
 
-class PaymentTypeSerializer(serializers.ModelSerializer):
-    created_at = serializers.DateTimeField(read_only=True)
+class PositionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Position
+        fields = (
+            'name',
+            'created_at',
+            'updated_at',
+        )
 
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = (
+            'name',
+            'created_at',
+            'updated_at',
+        )
+
+
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = '__all__'
+
+class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = (
+            'name',
+            'created_at',
+            'updated_at',
+        )
+
+
+class PaymentTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentType
         fields = (
@@ -40,8 +85,6 @@ class PaymentTypeSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-    created_at = serializers.DateTimeField(read_only=True)
-
     class Meta:
         model = Payment
         fields = (
@@ -53,8 +96,6 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class PaymentProcessSerializer(serializers.ModelSerializer):
-    created_at = serializers.DateTimeField(read_only=True)
-
     class Meta:
         model = PaymentProcess
         fields = (

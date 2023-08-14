@@ -1,7 +1,17 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 
 from apps.common.models import BaseModel
+from django.utils import timezone
+
+
+class VerificationCode(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def is_expired(self):
+        return timezone.now() > self.created_at + timezone.timedelta(minutes=15)
 
 
 class Country(BaseModel):
@@ -31,7 +41,7 @@ class Profile(BaseModel):
         ("female", "Female"),
         ("other", "Other"),
     ]
-
+    email = models.EmailField(null=True, blank=True)
     occupation = models.CharField(max_length=255)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     desc = models.TextField()

@@ -6,7 +6,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 #######
 
-
 class Interview(BaseModel):
     profile = models.ForeignKey(
         Profile, related_name="interviews", on_delete=models.CASCADE

@@ -8,6 +8,7 @@ from rest_framework.authtoken import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("account/", include("apps.accounts.urls")),
     path("blog/", include("apps.blog.urls")),
     path("ckeditor", include("ckeditor_uploader.urls")),
     path("course/", include("apps.course.urls")),
