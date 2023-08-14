@@ -1,5 +1,6 @@
 from django.db.models import Count
 from rest_framework import serializers
+from .utils import get_video_length
 from .models import (
     Course,
     CommentCourse,
@@ -8,8 +9,6 @@ from .models import (
     Video,
     CommentVideo,
     VideoWatchProgress,
-    Like,
-    Complain,
     UserCourse,
     UserCertificate,
     Author,
@@ -23,22 +22,37 @@ class UserCertificateSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ComplainSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Complain
-        fields = "__all__"
-
-
 class UserCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserCourse
         fields = "__all__"
 
 
-class CommentVideoSerializer(serializers.ModelSerializer):
+class ReplyCommentVideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentVideo
         fields = "__all__"
+
+
+class CommentVideoSerializer(serializers.ModelSerializer):
+    replies = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = CommentVideo
+        fields = (
+            "id",
+            "profile",
+            "video",
+            "main_comment",
+            "parent_comment",
+            "text",
+            "replies",
+        )
+
+    def get_replies(self, obj):
+        data = CommentVideo.objects.filter(main_comment=obj.id)
+        serializer = ReplyCommentVideoSerializer(data, many=True)
+        return serializer.data
 
 
 class VideoWatchProgressSerializer(serializers.ModelSerializer):
@@ -47,29 +61,37 @@ class VideoWatchProgressSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class LikeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Like
-        fields = "__all__"
-
-
 class VideoSerializer(serializers.ModelSerializer):
-    comment_video = CommentVideoSerializer(many=True, read_only=True)
     video_watch_progress = VideoWatchProgressSerializer(many=True, read_only=True)
+    is_finished = serializers.SerializerMethodField(read_only=True)
+    video_length = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Video
         fields = (
+            "id",
             "title",
+            "is_finished",
             "unit",
             "video",
             "video_url",
+            "video_length",
             "resource",
             "description",
             "order",
-            "comment_video",
             "video_watch_progress",
         )
+
+    def get_is_finished(self, obj):
+        user_id = self.context.get("user_id")
+        if VideoWatchProgress.objects.filter(profile=user_id, video=obj.id).exists():
+            return True
+        return False
+
+    def get_video_length(self, obj):
+        path = "/Users/sarvarrahmonov/Desktop/Projects/Ayol-Uchun/media/%s" % obj.video
+        lenght_of_video = get_video_length(path)
+        return lenght_of_video
 
 
 class ResourceSerializer(serializers.ModelSerializer):
@@ -137,13 +159,22 @@ class CourseSerializer(serializers.ModelSerializer):
 
 
 class UnitSerializer(serializers.ModelSerializer):
+    course = serializers.CharField(source="course.title")
     videos_of_unit = VideoSerializer(many=True, read_only=True)
     is_bought = serializers.SerializerMethodField(read_only=True)
     status = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Unit
-        fields = ("title", "is_bought", "status", "order", "videos_of_unit")
+        fields = (
+            "id",
+            "course",
+            "title",
+            "is_bought",
+            "status",
+            "order",
+            "videos_of_unit",
+        )
 
     def get_is_bought(self, instance):
         user_id = self.context.get("user_id")
@@ -161,7 +192,6 @@ class UnitSerializer(serializers.ModelSerializer):
             profile=user_id,
         ).aggregate(video_count=Count("video"))["video_count"]
         unit_video_count = Video.objects.filter(unit_id=instance.id).count()
-
         if watched_video_count == 0:
             return "Ko'rilmagan"
         elif watched_video_count > 0 and watched_video_count < unit_video_count:
@@ -175,4 +205,4 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ("name", "category")
+        fields = ("id", "name", "category")

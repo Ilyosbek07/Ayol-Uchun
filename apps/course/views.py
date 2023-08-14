@@ -1,37 +1,38 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.response import Response
-
+from apps.accounts.models import Profile
 from .models import (
     Course,
     CommentCourse,
     Unit,
-    Resource,
     Video,
     CommentVideo,
     VideoWatchProgress,
-    Like,
-    Complain,
     UserCourse,
     UserCertificate,
-    Author,
     Category,
 )
 from .serializers import (
     CourseSerializer,
     CommentCourseSerializer,
     UnitSerializer,
-    ResourceSerializer,
     VideoSerializer,
     CommentVideoSerializer,
-    VideoWatchProgressSerializer,
-    LikeSerializer,
-    ComplainSerializer,
     UserCourseSerializer,
     UserCertificateSerializer,
-    AuthorSerializer,
     CategorySerializer,
 )
 from .filters import CourseFilter
+
+
+class AdminAccessPermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if view.action in ["post", "put", "update", "delete", "destroy"]:
+            return request.user.is_authenticated and request.user.is_staff
+        return True
+
+
+# ----------------------------------------------------------------
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -56,19 +57,10 @@ class CommentCourseViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class AuthorViewSet(viewsets.ModelViewSet):
-    queryset = Author.objects.all()
-    serializer_class = AuthorSerializer
-
-
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-
-
 class UnitViewSet(viewsets.ModelViewSet):
     queryset = Unit.objects.all()
     serializer_class = UnitSerializer
+    permission_classes = [AdminAccessPermissions]
 
     def list(self, request, pk=None):
         queryset = self.get_queryset().filter(course=pk).order_by("order")
@@ -78,34 +70,40 @@ class UnitViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class ResourceViewSet(viewsets.ModelViewSet):
-    queryset = Resource.objects.all()
-    serializer_class = ResourceSerializer
-
-
 class VideoViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
+    permission_classes = [AdminAccessPermissions]
+
+    def retrieve(self, request, pk=None):
+        instance = Video.objects.get(pk=pk)
+        profile = Profile.objects.get(user=request.user.id)
+        obj = VideoWatchProgress.objects.get_or_create(
+            profile=profile, video=instance, last_viewed_seconds=1, is_completed=True
+        )
+        serializer = self.serializer_class(
+            instance=instance, context={"user_id": request.user.id}
+        )
+        return Response(serializer.data)
 
 
 class CommentVideoViewSet(viewsets.ModelViewSet):
     queryset = CommentVideo.objects.all()
     serializer_class = CommentVideoSerializer
 
-
-class VideoWatchProgressViewSet(viewsets.ModelViewSet):
-    queryset = VideoWatchProgress.objects.all()
-    serializer_class = VideoWatchProgressSerializer
-
-
-class LikeViewSet(viewsets.ModelViewSet):
-    queryset = Like.objects.all()
-    serializer_class = LikeSerializer
+    def retrieve(self, request, pk=None):
+        instance = CommentVideo.objects.filter(
+            video=pk, main_comment__isnull=True
+        ).all()
+        serializer = self.serializer_class(instance=instance, many=True)
+        return Response(serializer.data)
 
 
-class ComplainViewSet(viewsets.ModelViewSet):
-    queryset = Complain.objects.all()
-    serializer_class = ComplainSerializer
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
 
 
 class UserCourseViewSet(viewsets.ModelViewSet):
