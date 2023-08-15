@@ -4,7 +4,6 @@ from django.contrib import admin
 from django.urls import include, path
 
 from .schema import swagger_urlpatterns
-from rest_framework.authtoken import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -12,8 +11,6 @@ urlpatterns = [
     path("blog/", include("apps.blog.urls")),
     path("ckeditor", include("ckeditor_uploader.urls")),
     path("course/", include("apps.course.urls")),
-    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-    path('api-token-auth/', views.obtain_auth_token)
 ]
 
 urlpatterns += swagger_urlpatterns

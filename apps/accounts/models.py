@@ -5,15 +5,6 @@ from apps.common.models import BaseModel
 from django.utils import timezone
 
 
-class VerificationCode(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    code = models.CharField(max_length=6)
-    created_at = models.DateTimeField(default=timezone.now)
-
-    def is_expired(self):
-        return timezone.now() > self.created_at + timezone.timedelta(minutes=15)
-
-
 class Country(BaseModel):
     name = models.CharField(max_length=255)
 

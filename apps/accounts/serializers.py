@@ -4,17 +4,28 @@ from apps.accounts.models import Profile, PaymentType, PaymentProcess, Payment, 
 # serializers.py
 
 from rest_framework import serializers
-from djoser.serializers import UserCreateSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
-class CustomUserCreateSerializer(UserCreateSerializer):
-    class Meta(UserCreateSerializer.Meta):
-        fields = ('id', 'email', 'password', 'first_name','username', 'last_name')
+class RegisterUserSerializer(serializers.ModelSerializer):
+    token = serializers.SerializerMethodField()
+    class Meta:
+        model = User
+        fields = [
+            "username",
+            "password",
+            "email",
+            'token'
+        ]
+        extra_kwargs = {
+            "password": {"write_only": True},
+            "token": {"read_only": True},
+        }
 
-
-# Additional serializer for email verification
-class EmailVerificationSerializer(serializers.Serializer):
-    token = serializers.CharField()
+    def get_token(self, user):
+        tokens = RefreshToken.for_user(user)
+        data = {"refresh": str(tokens), "access": str(tokens.access_token)}
+        return data
 
 
 class ProfileSerializer(serializers.ModelSerializer):
